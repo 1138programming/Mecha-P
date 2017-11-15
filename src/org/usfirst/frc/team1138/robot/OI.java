@@ -1,39 +1,70 @@
 package org.usfirst.frc.team1138.robot;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 import org.usfirst.frc.team1138.robot.commands.ExampleCommand;
+//import org.usfirst.frc.team1138.robot.commands.LiftBase;
+import org.usfirst.frc.team1138.robot.commands.ShiftBase;
 
 /**
  * This class is the glue that binds the controls on the physical operator
  * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
-	//// CREATING BUTTONS
-	// One type of button is a joystick button which is any button on a
-	//// joystick.
-	// You create one by telling it which joystick it's on and which button
-	// number it is.
-	// Joystick stick = new Joystick(port);
-	// Button button = new JoystickButton(stick, buttonNumber);
+	private Joystick leftController, rightController, xBoxController;
+	private JoystickButton shiftBtn /*liftBtn*/; // Logitech Button 
+	private JoystickButton btnA, btnB, btnX, btnY, btnLB, btnRB; 
+	
+	public OI() {
+		leftController = new Joystick(RobotMap.KLeftJoystick);
+		rightController = new Joystick(RobotMap.KRightJoystick);
+		xBoxController = new Joystick(RobotMap.KXBoxController);
+		
+		//Logitech Buttons
+		shiftBtn = new JoystickButton(leftController, 1); //Shifts the Base from Low Gear to High Gear and vice versa
+//		liftBtn = new JoystickButton(leftController, 7);   //Shifts the Base to Lift the robot and vice versa
+		
+		//XBox Definitions (the functions of the buttons will change with time)
+		btnA	= new JoystickButton(xBoxController, RobotMap.KButtonA) ;	//Toggle Vision
+		btnB = new JoystickButton(xBoxController, RobotMap.KButtonB) ;	//Toggle Esophagus
+		btnX = new JoystickButton(xBoxController, RobotMap.KButtonX) ;	//Turn on shooter
+		btnY = new JoystickButton(xBoxController, RobotMap.KButtonY) ;	//Turn off shooter
+		btnLB = new JoystickButton(xBoxController, RobotMap.KLeftBumper) ;	//Decrease Flywheel Speed
+		btnRB = new JoystickButton(xBoxController, RobotMap.KRightBumper) ;	//Increase Flywheel Speed
+		
+		shiftBtn.whenPressed(new ShiftBase()); //TODO create ShiftBase function
+//		liftBtn.whenPressed(new LiftBase());
+//		buttonX->WhenPressed(new EngageShooter());
+//		buttonY->WhenPressed(new DisengageShooter());
+//		buttonB->WhenPressed(new ToggleEsophagus());
+//		buttonA->WhenPressed(new VisionTracking());
+//		buttonLB->WhenPressed(new OpenEsophagus());		//buttonLB->WhenPressed(new FlywheelDecreaseSpeed());
+//		buttonRB->WhenPressed(new CloseEsophagus());	//buttonRB->WhenPressed(new FlywheelIncreaseSpeed());
+	}
+	public double getRightController() {			//Right controller is right side drive
+		return rightController.getY();
+	}
 
-	// There are a few additional built in buttons you can use. Additionally,
-	// by subclassing Button you can create custom triggers and bind those to
-	// commands the same as any other Button.
+	public double getLeftController() {			//Left controller is left side drive
+		return leftController.getY();
+	}
 
-	//// TRIGGERING COMMANDS WITH BUTTONS
-	// Once you have a button, it's trivial to bind it to a button in one of
-	// three ways:
+/*	public boolean getLeftTrigger() {				//left controller's trigger is the shifter
+		return liftBtn.get(); 
+	}*/
 
-	// Start the command when the button is pressed and let it run the command
-	// until it is finished as determined by it's isFinished method.
-	// button.whenPressed(new ExampleCommand());
+	public boolean getRightTrigger() {			//right controller's trigger engages the lift
+		return shiftBtn.get(); 
+	}
 
-	// Run the command while the button is being held down and interrupt it once
-	// the button is released.
-	// button.whileHeld(new ExampleCommand());
+	public double getLeftXBoxAxis() {			//left xbox axis controls the collector
+		return (-xBoxController.getRawAxis(1));
+	}
 
-	// Start the command when the button is released and let it run the command
-	// until it is finished as determined by it's isFinished method.
-	// button.whenReleased(new ExampleCommand());
+	//Fine control from collector, signal from joystick is reversed
+	public double getRightXBoxAxis() {
+		return (-xBoxController.getRawAxis(5));
+	}
 }
