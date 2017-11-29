@@ -4,8 +4,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
-import org.usfirst.frc.team1138.robot.commands.ExampleCommand;
-//import org.usfirst.frc.team1138.robot.commands.LiftBase;
+//import org.usfirst.frc.team1138.robot.commands.ExampleCommand;
 import org.usfirst.frc.team1138.robot.commands.ShiftBase;
 
 /**
@@ -13,29 +12,50 @@ import org.usfirst.frc.team1138.robot.commands.ShiftBase;
  * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
+	
+	//Limit for Xbox joysticks to get out of the "dead zone"
+	public static final double KXboxDeadZoneLimit = 0.2;
+	
+	//Joystick Definitions
+	public static final int KLeftJoystick = 0 ;
+	public static final int KRightJoystick = 1 ;
+	public static final int KXBoxController = 2;
+
+	//XBox button definitions
+	public static final int KButtonA = 1 ;	//Add description of function here
+	public static final int KButtonB = 2 ;	//Add description of function here
+	public static final int KButtonX = 3 ;	//Add description of function here
+	public static final int KButtonY = 4 ;	//Add description of function here
+	public static final int KLeftBumper = 5 ;	//Add description of function here
+	public static final int KRightBumper = 6 ; //Add description of function here
+	// For example to map the left and right motors, you could define the
+	// following variables to use with your drivetrain subsystem.
+	// public static int leftMotor = 1;
+	// public static int rightMotor = 2;
+	
+	//Define joysticks and joystick buttons
 	private Joystick leftController, rightController, xBoxController;
-	private JoystickButton shiftBtn /*liftBtn*/; // Logitech Button 
+	private JoystickButton shiftBtn; // Logitech Button 
 	private JoystickButton btnA, btnB, btnX, btnY, btnLB, btnRB; 
 	
 	public OI() {
-		leftController = new Joystick(RobotMap.KLeftJoystick);
-		rightController = new Joystick(RobotMap.KRightJoystick);
-		xBoxController = new Joystick(RobotMap.KXBoxController);
+		leftController = new Joystick(KLeftJoystick);
+		rightController = new Joystick(KRightJoystick);
+		xBoxController = new Joystick(KXBoxController);
 		
 		//Logitech Buttons
 		shiftBtn = new JoystickButton(leftController, 1); //Shifts the Base from Low Gear to High Gear and vice versa
-//		liftBtn = new JoystickButton(leftController, 7);   //Shifts the Base to Lift the robot and vice versa
 		
 		//XBox Definitions (the functions of the buttons will change with time)
-		btnA	= new JoystickButton(xBoxController, RobotMap.KButtonA) ;	//Toggle Vision
-		btnB = new JoystickButton(xBoxController, RobotMap.KButtonB) ;	//Toggle Esophagus
-		btnX = new JoystickButton(xBoxController, RobotMap.KButtonX) ;	//Turn on shooter
-		btnY = new JoystickButton(xBoxController, RobotMap.KButtonY) ;	//Turn off shooter
-		btnLB = new JoystickButton(xBoxController, RobotMap.KLeftBumper) ;	//Decrease Flywheel Speed
-		btnRB = new JoystickButton(xBoxController, RobotMap.KRightBumper) ;	//Increase Flywheel Speed
+		btnA	= new JoystickButton(xBoxController, KButtonA) ;	//Toggle Vision
+		btnB = new JoystickButton(xBoxController, KButtonB) ;	//Toggle Esophagus
+		btnX = new JoystickButton(xBoxController, KButtonX) ;	//Turn on shooter
+		btnY = new JoystickButton(xBoxController, KButtonY) ;	//Turn off shooter
+		btnLB = new JoystickButton(xBoxController, KLeftBumper) ;	//Decrease Flywheel Speed
+		btnRB = new JoystickButton(xBoxController, KRightBumper) ;	//Increase Flywheel Speed
 		
-		shiftBtn.whenPressed(new ShiftBase()); //TODO create ShiftBase function
-//		liftBtn.whenPressed(new LiftBase());
+		shiftBtn.whenPressed(new ShiftBase());
+//		The following are example buttons from Momentum:
 //		buttonX->WhenPressed(new EngageShooter());
 //		buttonY->WhenPressed(new DisengageShooter());
 //		buttonB->WhenPressed(new ToggleEsophagus());
@@ -51,11 +71,12 @@ public class OI {
 		return leftController.getY();
 	}
 
-/*	public boolean getLeftTrigger() {				//left controller's trigger is the shifter
-		return liftBtn.get(); 
-	}*/
+	public boolean getLeftTrigger() {				//left controller's trigger is currently unused
+		return true;
+		//Add function here, currently this doesn't do much.
+	}
 
-	public boolean getRightTrigger() {			//right controller's trigger engages the lift
+	public boolean getRightTrigger() {			//right controller's trigger engages the shift on the base
 		return shiftBtn.get(); 
 	}
 

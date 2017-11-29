@@ -9,6 +9,12 @@ import com.ctre.CANTalon;
  */
 public class Flywheel extends Subsystem {
 
+	//Setup the flywheel configuration
+	public static final int KFlywheelIndexTalon = 9;
+	public static final int KFlywheelAngleAdjusterTalon = 10;
+	public static final int KFlywheelBottomTalon = 11;
+	public static final int KFlywheelTopTalon = 12;
+	
     private CANTalon topFlywheelMotor,
     				 bottomFlywheelMotor,
     				 angleAdjusterFlywheelMotor,
@@ -16,10 +22,10 @@ public class Flywheel extends Subsystem {
     public Flywheel()
     {
     	//Setup the motors
-    	topFlywheelMotor = new CANTalon(RobotMap.KFlywheelTopTalon);
-    	bottomFlywheelMotor = new CANTalon(RobotMap.KFlywheelBottomTalon);
-    	angleAdjusterFlywheelMotor = new CANTalon(RobotMap.KFlywheelAngleAdjusterTalon);
-    	indexerFlywheelMotor = new CANTalon(RobotMap.KFlywheelIndexTalon);
+    	topFlywheelMotor = new CANTalon(KFlywheelTopTalon);
+    	bottomFlywheelMotor = new CANTalon(KFlywheelBottomTalon);
+    	angleAdjusterFlywheelMotor = new CANTalon(KFlywheelAngleAdjusterTalon);
+    	indexerFlywheelMotor = new CANTalon(KFlywheelIndexTalon);
     	
     	//Configure masters and enable
     	topFlywheelMotor.setSafetyEnabled(true);

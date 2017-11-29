@@ -9,11 +9,14 @@ import com.ctre.CANTalon;
  */
 public class Hopper extends Subsystem {
 
+	//Setup the hopper configuration
+	public static final int KHopperTalon = 8;
+	
 	private CANTalon hopperMotor;
 	
 	public Hopper() {
 		//Setup the motor
-		hopperMotor = new CANTalon(RobotMap.KHopperTalon);
+		hopperMotor = new CANTalon(KHopperTalon);
 		//Configure and enable
 		hopperMotor.setSafetyEnabled(true);
 		hopperMotor.enableControl();
