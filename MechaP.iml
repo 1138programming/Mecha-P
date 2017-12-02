@@ -27,67 +27,21 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library">
-      <library name="wpilib">
-        <CLASSES>
-          <root url="file://$wpilib$" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="file://$wpilib.sources$" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="networktables">
-        <CLASSES>
-          <root url="file://$networktables$" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="file://$networktables.sources$" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="opencv">
-        <CLASSES>
-          <root url="file://$opencv$" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="file://$opencv.sources$" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="cscore">
-        <CLASSES>
-          <root url="file://$cscore$" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="file://$cscore.sources$" />
-        </SOURCES>
-      </library>
-    </orderEntry>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="module-library">
-      <library name="CTRLib.jar">
+      <library name="WPILib User Lib Directory">
         <CLASSES>
-          <root url="file://$USERLIBS_DIR$/CTRLib.jar" />
+          <root url="file://$USER_HOME$/wpilib/user/java/lib" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="navx_frc.jar">
-        <CLASSES>
-          <root url="file://$USERLIBS_DIR$/navx_frc.jar" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="file://$USER_HOME$/wpilib/user/java/lib" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="file://$USER_HOME$/wpilib/user/java/lib" />
+        </SOURCES>
+        <jarDirectory url="file://$USER_HOME$/wpilib/user/java/lib" recursive="true" />
+        <jarDirectory url="file://$USER_HOME$/wpilib/user/java/lib" recursive="true" type="JAVADOC" />
+        <jarDirectory url="file://$USER_HOME$/wpilib/user/java/lib" recursive="true" type="SOURCES" />
       </library>
     </orderEntry>
     <orderEntry type="module-library">
@@ -104,22 +58,6 @@
         <jarDirectory url="file://$USER_HOME$/wpilib/java/current/lib" recursive="true" />
         <jarDirectory url="file://$USER_HOME$/wpilib/java/current/lib" recursive="true" type="JAVADOC" />
         <jarDirectory url="file://$USER_HOME$/wpilib/java/current/lib" recursive="true" type="SOURCES" />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="WPILib User Lib Directory">
-        <CLASSES>
-          <root url="file://$USER_HOME$/wpilib/user/java/lib" />
-        </CLASSES>
-        <JAVADOC>
-          <root url="file://$USER_HOME$/wpilib/user/java/lib" />
-        </JAVADOC>
-        <SOURCES>
-          <root url="file://$USER_HOME$/wpilib/user/java/lib" />
-        </SOURCES>
-        <jarDirectory url="file://$USER_HOME$/wpilib/user/java/lib" recursive="true" />
-        <jarDirectory url="file://$USER_HOME$/wpilib/user/java/lib" recursive="true" type="JAVADOC" />
-        <jarDirectory url="file://$USER_HOME$/wpilib/user/java/lib" recursive="true" type="SOURCES" />
       </library>
     </orderEntry>
   </component>
