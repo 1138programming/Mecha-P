@@ -1,8 +1,13 @@
 package frc.team1138.robot.subsystems;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team1138.robot.utils.DriveTrain;
 //import frc.team1138.robot.RobotMap; Uncomment if RobotMap is needed.
 import frc.team1138.robot.utils.MotorUtils;
+
+import com.ctre.CANTalon;
+import com.ctre.PigeonImu;
+
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import frc.team1138.robot.commands.DriveWithJoysticks;
 
@@ -38,6 +43,8 @@ public class DriveBase extends Subsystem {
 					 rightRearBaseMotor,
 					 rightTopBaseMotor;
 	private DriveTrain driveTrain; 
+	private PigeonImu pigeonImu; 
+	private CANTalon gyroTalon; 
 	private DoubleSolenoid shifterSolenoid; //There will probably be a shift solenoid
 	
 //	private AHRS gyroAccel;
@@ -61,10 +68,12 @@ public class DriveBase extends Subsystem {
 		driveTrain = new DriveTrain(leftFrontBaseMotor, rightFrontBaseMotor); 
 		// Solenoids 
 		shifterSolenoid = new DoubleSolenoid(KShifterSolenoid1, KShifterSolenoid2);
-		//Gyro & Accel
-//		gyroAccel = new AHRS(Port.kMXP);
-//		gyroAccel.zeroYaw();
-		}
+		//Gyro & Accel. The new Pigeon Imu is connected to a talon
+		gyroTalon = new CANTalon(3); 
+		pigeonImu = new PigeonImu(gyroTalon);
+		SmartDashboard.putNumber("Navx Connection: ", pigeonImu.GetFirmVers());
+		pigeonImu.SetYaw(0);
+	}
 	
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.
@@ -90,5 +99,22 @@ public class DriveBase extends Subsystem {
 		} else {
 			lowShiftBase();
 		}
+	}
+
+	/**
+     * public method to reset Gyro value
+     */
+    public void resetGyro() {
+        pigeonImu.SetYaw(0);
+	}
+
+    /**
+     * @return Current Gyro Value in degrees from 180.0 to -180.0
+     */
+    public double getAngle() {
+        double[] ypr = new double[3];
+		pigeonImu.GetYawPitchRoll(ypr);
+		//if it is not positive when turns right, then sign negative
+		return (-ypr[0]); 
 	}
 }
