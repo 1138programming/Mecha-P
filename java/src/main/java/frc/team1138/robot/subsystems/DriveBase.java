@@ -1,14 +1,10 @@
 package frc.team1138.robot.subsystems;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.team1138.robot.utils.DriveTrain;
 //import frc.team1138.robot.RobotMap; Uncomment if RobotMap is needed.
-
-import com.ctre.CANTalon;
-
+import frc.team1138.robot.utils.MotorUtils;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.SPI.Port;
-import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-
+import frc.team1138.robot.commands.DriveWithJoysticks;
 
 /**
  *This will be what the finished subsystem should look like when everything is included.
@@ -35,86 +31,51 @@ public class DriveBase extends Subsystem {
 	public static final int KShifterSolenoid1 = 0;
 	public static final int KShifterSolenoid2 = 1;
 	
-	//This is a limit to make sure that the joystick isn't potentially stuck for the function tankDrive
-	public static final double KDeadZoneLimit = 0.1;
-	
-	private CANTalon leftFrontBaseMotor,
+	private MotorUtils leftFrontBaseMotor,
 					 rightFrontBaseMotor,
 					 leftRearBaseMotor,
 					 leftTopBaseMotor,
 					 rightRearBaseMotor,
 					 rightTopBaseMotor;
+	private DriveTrain driveTrain; 
 	private DoubleSolenoid shifterSolenoid; //There will probably be a shift solenoid
-	
 	
 //	private AHRS gyroAccel;
 	public DriveBase() {
 		// Motors
-		// master motors
-		leftFrontBaseMotor = new CANTalon(KLeftFrontBaseTalon);
-		rightFrontBaseMotor = new CANTalon(KRightFrontBaseTalon);
-		//slave motors 
-		leftRearBaseMotor = new CANTalon(KLeftRearBaseTalon);
-		leftTopBaseMotor = new CANTalon(KLeftTopBaseTalon);
-		rightRearBaseMotor = new CANTalon(KRightRearBaseTalon);
-		rightTopBaseMotor = new CANTalon(KRightTopBaseTalon);
-		// Config the masters and enable
-		leftFrontBaseMotor.setInverted(true);
-		initSafeMotor();
-		rightFrontBaseMotor.enableControl();
-		leftFrontBaseMotor.enableControl();
-		// Config the slaves
-		leftRearBaseMotor.changeControlMode(CANTalon.TalonControlMode.Follower);
-		leftTopBaseMotor.changeControlMode(CANTalon.TalonControlMode.Follower);
-		rightRearBaseMotor.changeControlMode(CANTalon.TalonControlMode.Follower);
-		rightTopBaseMotor.changeControlMode(CANTalon.TalonControlMode.Follower);
-		leftRearBaseMotor.set(leftFrontBaseMotor.getDeviceID());
-		leftTopBaseMotor.set(leftFrontBaseMotor.getDeviceID());
-		rightRearBaseMotor.set(rightFrontBaseMotor.getDeviceID());
-		rightTopBaseMotor.set(rightFrontBaseMotor.getDeviceID());
-		
+		// Enable master motors and encoders 
+		leftFrontBaseMotor = new MotorUtils(KLeftFrontBaseTalon);
+		leftFrontBaseMotor.enableControl().setInverted(true).setEncoder(4095); 
+		rightFrontBaseMotor = new MotorUtils(KRightFrontBaseTalon);
+		rightFrontBaseMotor.enableControl().setEncoder(4095);
+		//Enable slave motors 
+		leftRearBaseMotor = new MotorUtils(KLeftRearBaseTalon);
+		leftRearBaseMotor.slaveTo(leftFrontBaseMotor); 
+		leftTopBaseMotor = new MotorUtils(KLeftTopBaseTalon);
+		leftTopBaseMotor.slaveTo(leftFrontBaseMotor);
+		rightRearBaseMotor = new MotorUtils(KRightRearBaseTalon);
+		rightRearBaseMotor.slaveTo(rightFrontBaseMotor); 
+		rightTopBaseMotor = new MotorUtils(KRightTopBaseTalon);
+		rightTopBaseMotor.slaveTo(rightFrontBaseMotor); 
+		// Drive Train 
+		driveTrain = new DriveTrain(leftFrontBaseMotor, rightFrontBaseMotor); 
 		// Solenoids 
 		shifterSolenoid = new DoubleSolenoid(KShifterSolenoid1, KShifterSolenoid2);
-		
 		//Gyro & Accel
 //		gyroAccel = new AHRS(Port.kMXP);
 //		gyroAccel.zeroYaw();
-		
-		//Encoders 
-		leftFrontBaseMotor.setFeedbackDevice(CANTalon.FeedbackDevice.CtreMagEncoder_Relative);
-		rightFrontBaseMotor.setFeedbackDevice(CANTalon.FeedbackDevice.CtreMagEncoder_Relative);
-		leftFrontBaseMotor.configEncoderCodesPerRev(4095);
-		rightFrontBaseMotor.configEncoderCodesPerRev(4095);
-		leftFrontBaseMotor.setEncPosition(0);
-		rightFrontBaseMotor.setEncPosition(0);
-		
-		// LiveWindow
-//		LiveWindow.addSensor("SubDriveBase", "Gyro", gyroAccel);
-//		LiveWindow.addActuator("SubDriveBase", "Left Front Motor", leftFrontBaseMotor);
-//		LiveWindow.addActuator("SubDriveBase", "Right Front Motor", rightFrontBaseMotor);
-//		LiveWindow.addActuator("SubDriveBase", "Left Rear Motor", leftRearBaseMotor);
-//		LiveWindow.addActuator("SubDriveBase", "Right Rear Motor", rightRearBaseMotor);
 		}
-
-	private void initSafeMotor() {
-		leftFrontBaseMotor.setSafetyEnabled(true);
-		rightFrontBaseMotor.setSafetyEnabled(true);
-		leftRearBaseMotor.setSafetyEnabled(true);
-		rightRearBaseMotor.setSafetyEnabled(true);
-		leftTopBaseMotor.setSafetyEnabled(true);
-		rightTopBaseMotor.setSafetyEnabled(true);
-	}
 	
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.
-        //setDefaultCommand(new MySpecialCommand());
-    }
-    public void tankDrive(double left, double right) {
-		if(left > KDeadZoneLimit || left < -KDeadZoneLimit) leftFrontBaseMotor.set(left);
-		else leftFrontBaseMotor.set(0);
-		if(right > KDeadZoneLimit || right < -KDeadZoneLimit) rightFrontBaseMotor.set(right);
-		else rightFrontBaseMotor.set(0);
+		//setDefaultCommand(new MySpecialCommand());
+		setDefaultCommand(new DriveWithJoysticks());
 	}
+	
+    public void tankDrive(double left, double right) {
+		driveTrain.tankDrive(left, right);
+	}
+
     public void highShiftBase() {
 		shifterSolenoid.set(DoubleSolenoid.Value.kReverse);
 	}
@@ -122,6 +83,7 @@ public class DriveBase extends Subsystem {
 	public void lowShiftBase() {
 		shifterSolenoid.set(DoubleSolenoid.Value.kForward);
 	}
+
     public void toggleShift() {
 		if (shifterSolenoid.get() == DoubleSolenoid.Value.kForward) {
 			highShiftBase();
