@@ -12,6 +12,11 @@ public class Hopper extends Subsystem {
 	//Setup the hopper configuration
 	public static final int KHopperTalon = 8;
 	
+	public static final double hopperFullSpeed = 0.8;
+	public static final double hopperMediumSpeed = 0.5;
+	public static final double hopperLowSpeed = 0.3;
+	public static final double hopperStop = 0;
+	
 	private CANTalon hopperMotor;
 	
 	public Hopper() {
@@ -26,5 +31,22 @@ public class Hopper extends Subsystem {
         // Set the default command for a subsystem here.
         //setDefaultCommand(new MySpecialCommand());
     }
+    
+    public void runHopper()
+    {
+    	hopperMotor.set(hopperFullSpeed);
+    }
+    
+    public void runHopper(double speed)
+    {
+    	hopperMotor.set(speed);
+    }
+    
+    public void stopHopper()
+    {
+    	hopperMotor.set(hopperStop);
+    	
+    }
+    
 }
 

@@ -10,10 +10,12 @@ package org.usfirst.frc.team1138.robot;
  * as well just in case you can't find something, but are all commented out.
  */
 public class RobotMap {	
-
-	/*
-	This first comment box is all of the mapping we are using for MechaP. The second is from JavaMomentum.
 	
+	/**
+	This first comment box is all of the mapping we are using for MechaP. The second is from JavaMomentum.
+	This box is organized in the following order: subsystem files, robot files.
+	
+----BASE--------------------------------------------------------------------------------------------------
 	//Setup the base configuration by assigning talons
 	public static final int KLeftRearBaseTalon =  1;
 	public static final int KLeftFrontBaseTalon = 2 ;
@@ -37,18 +39,26 @@ public class RobotMap {
 	
 	public static final double KXboxDeadZoneLimit = 0.2;
 	
+----FLYWHEEL-----------------------------------------------------------------------------------------------
 	//Setup the flywheel configuration
 	public static final int KFlywheelIndexTalon = 9;
 	public static final int KFlywheelAngleAdjusterTalon = 10;
 	public static final int KFlywheelBottomTalon = 11;
 	public static final int KFlywheelTopTalon = 12;
 	
+----HOPPER-------------------------------------------------------------------------------------------------
 	//Setup the hopper configuration
 	public static final int KHopperTalon = 8;
 	
+	public static final int hopperFullSpeed = 1;
+	public static final int hopperHalfSpeed = 0.5;
+	public static final int hopperLowSpeed = 0.3;
+	
+----TURRET-------------------------------------------------------------------------------------------------
 	//Setup the turret configuration
 	public static final int KTurretTalon = 7;
 	
+----OI-----------------------------------------------------------------------------------------------------
 	//Joystick Definitions
 	public static final int KLeftJoystick = 0 ;
 	public static final int KRightJoystick = 1 ;
@@ -70,7 +80,7 @@ public class RobotMap {
 	private JoystickButton shiftBtn liftBtn; // Logitech Button 
 	private JoystickButton btnA, btnB, btnX, btnY, btnLB, btnRB; 
 	
-	*/
+	**/
 	
 	/*
 	This is JavaMomentum code to take as examples for things we may need later.

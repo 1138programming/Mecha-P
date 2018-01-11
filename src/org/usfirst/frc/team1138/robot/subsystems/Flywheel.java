@@ -15,6 +15,12 @@ public class Flywheel extends Subsystem {
 	public static final int KFlywheelBottomTalon = 11;
 	public static final int KFlywheelTopTalon = 12;
 	
+	//For now, these speeds are unified for all the motors in the subsystem until they need to be separate speeds.
+	public static final double fullSpeed = 0.8;
+	public static final double mediumSpeed = 0.5;
+	public static final double lowSpeed = 0.3;
+	public static final int stop = 0;
+	
     private CANTalon topFlywheelMotor,
     				 bottomFlywheelMotor,
     				 angleAdjusterFlywheelMotor,
@@ -44,6 +50,54 @@ public class Flywheel extends Subsystem {
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.
         //setDefaultCommand(new MySpecialCommand());
+    }
+    
+    public void runShooter()
+    {
+    	topFlywheelMotor.set(fullSpeed);
+    	bottomFlywheelMotor.set(fullSpeed);
+    }
+    
+    public void runShooter(double speed)
+    {
+    	topFlywheelMotor.set(speed);
+    	bottomFlywheelMotor.set(speed);
+    }
+    
+    public void stopShooter()
+    {
+    	topFlywheelMotor.set(stop);
+    	bottomFlywheelMotor.set(stop);
+    }
+    
+    public void runAngleAdjuster()
+    {
+    	angleAdjusterFlywheelMotor.set(fullSpeed);
+    }
+    
+    public void runAngleAdjuster(double speed)
+    {
+    	angleAdjusterFlywheelMotor.set(speed);
+    }
+    
+    public void stopAngleAdjuster()
+    {
+    	angleAdjusterFlywheelMotor.set(stop);
+    }
+    
+    public void runIndexer()
+    {
+    	indexerFlywheelMotor.set(fullSpeed);
+    }
+    
+    public void runIndexer(double speed)
+    {
+    	indexerFlywheelMotor.set(speed);
+    }
+    
+    public void stopIndexer()
+    {
+    	indexerFlywheelMotor.set(stop);
     }
 }
 
