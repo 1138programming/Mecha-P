@@ -2,7 +2,7 @@ package frc.team1138.robot.subsystems;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.team1138.robot.RobotMap;
-import com.ctre.CANTalon;
+import com.ctre.phoenix. motorcontrol.can.TalonSRX;
 /**
  *
  */
@@ -11,14 +11,14 @@ public class Turret extends Subsystem {
 	//Setup the turret configuration
 	public static final int KTurretTalon = 7;
 	
-	private CANTalon turretMotor;
+	private TalonSRX turretMotor;
 	
 	public Turret() {
 		//Setup the motor
-		turretMotor = new CANTalon(KTurretTalon);
+		turretMotor = new TalonSRX(KTurretTalon);
 		//Configure and enable
-		turretMotor.setSafetyEnabled(true);
-		turretMotor.enableControl();
+//		turretMotor.setSafetyEnabled(true);
+//		turretMotor.enableControl();
 	}
 
     public void initDefaultCommand() {
