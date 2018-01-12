@@ -2,7 +2,8 @@ package org.usfirst.frc.team1138.robot.subsystems;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team1138.robot.RobotMap;
-import com.ctre.CANTalon;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.ControlMode;
 
 /**
  *
@@ -21,30 +22,31 @@ public class Flywheel extends Subsystem {
 	public static final double lowSpeed = 0.3;
 	public static final int stop = 0;
 	
-    private CANTalon topFlywheelMotor,
+    private TalonSRX topFlywheelMotor,
     				 bottomFlywheelMotor,
     				 angleAdjusterFlywheelMotor,
     				 indexerFlywheelMotor;
     public Flywheel()
     {
     	//Setup the motors
-    	topFlywheelMotor = new CANTalon(KFlywheelTopTalon);
-    	bottomFlywheelMotor = new CANTalon(KFlywheelBottomTalon);
-    	angleAdjusterFlywheelMotor = new CANTalon(KFlywheelAngleAdjusterTalon);
-    	indexerFlywheelMotor = new CANTalon(KFlywheelIndexTalon);
+    	topFlywheelMotor = new TalonSRX(KFlywheelTopTalon);
+    	bottomFlywheelMotor = new TalonSRX(KFlywheelBottomTalon);
+    	angleAdjusterFlywheelMotor = new TalonSRX(KFlywheelAngleAdjusterTalon);
+    	indexerFlywheelMotor = new TalonSRX(KFlywheelIndexTalon);
     	
     	//Configure masters and enable
-    	topFlywheelMotor.setSafetyEnabled(true);
-		bottomFlywheelMotor.setSafetyEnabled(true);
-		angleAdjusterFlywheelMotor.setSafetyEnabled(true);
-		indexerFlywheelMotor.setSafetyEnabled(true);
-    	topFlywheelMotor.enableControl();
-    	angleAdjusterFlywheelMotor.enableControl();
-    	indexerFlywheelMotor.enableControl();
+    	//topFlywheelMotor.setSafetyEnabled(true);
+		//bottomFlywheelMotor.setSafetyEnabled(true);
+		//angleAdjusterFlywheelMotor.setSafetyEnabled(true);
+		//indexerFlywheelMotor.setSafetyEnabled(true);
+    	//topFlywheelMotor.enableControl();
+    	//angleAdjusterFlywheelMotor.enableControl();
+    	//indexerFlywheelMotor.enableControl();
     	
     	//Configure the bottom motor as a slave
-    	bottomFlywheelMotor.changeControlMode(CANTalon.TalonControlMode.Follower);
-    	bottomFlywheelMotor.set(topFlywheelMotor.getDeviceID());
+    	bottomFlywheelMotor.set(
+    			ControlMode.Follower,
+    			topFlywheelMotor.getDeviceID());
     }
 
     public void initDefaultCommand() {
@@ -54,50 +56,50 @@ public class Flywheel extends Subsystem {
     
     public void runShooter()
     {
-    	topFlywheelMotor.set(fullSpeed);
-    	bottomFlywheelMotor.set(fullSpeed);
+    	topFlywheelMotor.set(ControlMode.PercentOutput, fullSpeed);
+    	bottomFlywheelMotor.set(ControlMode.PercentOutput, fullSpeed);
     }
     
     public void runShooter(double speed)
     {
-    	topFlywheelMotor.set(speed);
-    	bottomFlywheelMotor.set(speed);
+    	topFlywheelMotor.set(ControlMode.PercentOutput, speed);
+    	bottomFlywheelMotor.set(ControlMode.PercentOutput, speed);
     }
     
     public void stopShooter()
     {
-    	topFlywheelMotor.set(stop);
-    	bottomFlywheelMotor.set(stop);
+    	topFlywheelMotor.set(ControlMode.PercentOutput, stop);
+    	bottomFlywheelMotor.set(ControlMode.PercentOutput, stop);
     }
     
     public void runAngleAdjuster()
     {
-    	angleAdjusterFlywheelMotor.set(fullSpeed);
+    	angleAdjusterFlywheelMotor.set(ControlMode.PercentOutput, fullSpeed);
     }
     
     public void runAngleAdjuster(double speed)
     {
-    	angleAdjusterFlywheelMotor.set(speed);
+    	angleAdjusterFlywheelMotor.set(ControlMode.PercentOutput, speed);
     }
     
     public void stopAngleAdjuster()
     {
-    	angleAdjusterFlywheelMotor.set(stop);
+    	angleAdjusterFlywheelMotor.set(ControlMode.PercentOutput, stop);
     }
     
     public void runIndexer()
     {
-    	indexerFlywheelMotor.set(fullSpeed);
+    	indexerFlywheelMotor.set(ControlMode.PercentOutput, fullSpeed);
     }
     
     public void runIndexer(double speed)
     {
-    	indexerFlywheelMotor.set(speed);
+    	indexerFlywheelMotor.set(ControlMode.PercentOutput, speed);
     }
     
     public void stopIndexer()
     {
-    	indexerFlywheelMotor.set(stop);
+    	indexerFlywheelMotor.set(ControlMode.PercentOutput, stop);
     }
 }
 

@@ -2,12 +2,15 @@ package org.usfirst.frc.team1138.robot.subsystems;
 import edu.wpi.first.wpilibj.command.Subsystem;
 //import org.usfirst.frc.team1138.robot.RobotMap; Uncomment if RobotMap is needed.
 
-import com.ctre.CANTalon;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import org.usfirst.frc.team1138.robot.commands.DriveWithJoysticks;
 
 import java.lang.Object;
 
@@ -39,7 +42,7 @@ public class DriveBase extends Subsystem {
 	//This is a limit to make sure that the joystick isn't potentially stuck for the function tankDrive
 	public static final double KDeadZoneLimit = 0.1;
 	
-	private CANTalon leftFrontBaseMotor,
+	private TalonSRX leftFrontBaseMotor,
 					 rightFrontBaseMotor,
 					 leftRearBaseMotor,
 					 leftTopBaseMotor,
@@ -52,27 +55,31 @@ public class DriveBase extends Subsystem {
 	public DriveBase() {
 		// Motors
 		// master motors
-		leftFrontBaseMotor = new CANTalon(KLeftFrontBaseTalon);
-		rightFrontBaseMotor = new CANTalon(KRightFrontBaseTalon);
+		leftFrontBaseMotor = new TalonSRX(KLeftFrontBaseTalon);
+		rightFrontBaseMotor = new TalonSRX(KRightFrontBaseTalon);
 		//slave motors 
-		leftRearBaseMotor = new CANTalon(KLeftRearBaseTalon);
-		leftTopBaseMotor = new CANTalon(KLeftTopBaseTalon);
-		rightRearBaseMotor = new CANTalon(KRightRearBaseTalon);
-		rightTopBaseMotor = new CANTalon(KRightTopBaseTalon);
+		leftRearBaseMotor = new TalonSRX(KLeftRearBaseTalon);
+		leftTopBaseMotor = new TalonSRX(KLeftTopBaseTalon);
+		rightRearBaseMotor = new TalonSRX(KRightRearBaseTalon);
+		rightTopBaseMotor = new TalonSRX(KRightTopBaseTalon);
 		// Config the masters and enable
 		leftFrontBaseMotor.setInverted(true);
 		initSafeMotor();
-		rightFrontBaseMotor.enableControl();
-		leftFrontBaseMotor.enableControl();
+		//		rightFrontBaseMotor.enableControl(); - Removed
+		//		leftFrontBaseMotor.enableControl();  - Removed
 		// Config the slaves
-		leftRearBaseMotor.changeControlMode(CANTalon.TalonControlMode.Follower);
-		leftTopBaseMotor.changeControlMode(CANTalon.TalonControlMode.Follower);
-		rightRearBaseMotor.changeControlMode(CANTalon.TalonControlMode.Follower);
-		rightTopBaseMotor.changeControlMode(CANTalon.TalonControlMode.Follower);
-		leftRearBaseMotor.set(leftFrontBaseMotor.getDeviceID());
-		leftTopBaseMotor.set(leftFrontBaseMotor.getDeviceID());
-		rightRearBaseMotor.set(rightFrontBaseMotor.getDeviceID());
-		rightTopBaseMotor.set(rightFrontBaseMotor.getDeviceID());
+		leftRearBaseMotor.set(
+				ControlMode.Follower,
+				leftFrontBaseMotor.getDeviceID());
+		leftTopBaseMotor.set(
+				ControlMode.Follower,
+				leftFrontBaseMotor.getDeviceID());
+		rightRearBaseMotor.set(
+				ControlMode.Follower,
+				rightFrontBaseMotor.getDeviceID());
+		rightTopBaseMotor.set(
+				ControlMode.Follower,
+				rightFrontBaseMotor.getDeviceID());
 		
 		// Solenoids 
 		shifterSolenoid = new DoubleSolenoid(KShifterSolenoid1, KShifterSolenoid2);
@@ -82,12 +89,24 @@ public class DriveBase extends Subsystem {
 //		gyroAccel.zeroYaw();
 		
 		//Encoders 
-		leftFrontBaseMotor.setFeedbackDevice(CANTalon.FeedbackDevice.CtreMagEncoder_Relative);
-		rightFrontBaseMotor.setFeedbackDevice(CANTalon.FeedbackDevice.CtreMagEncoder_Relative);
-		leftFrontBaseMotor.configEncoderCodesPerRev(4095);
-		rightFrontBaseMotor.configEncoderCodesPerRev(4095);
-		leftFrontBaseMotor.setEncPosition(0);
-		rightFrontBaseMotor.setEncPosition(0);
+		leftFrontBaseMotor.configSelectedFeedbackSensor(
+				FeedbackDevice.CTRE_MagEncoder_Relative,
+				0, // Use Primary Closed Loop
+				0);// timeoutMS
+		rightFrontBaseMotor.configSelectedFeedbackSensor(
+				FeedbackDevice.CTRE_MagEncoder_Relative,
+				0, // Use Primary Closed Loop
+				0);// timeoutMS
+		//leftFrontBaseMotor.configEncoderCodesPerRev(4095);
+		//rightFrontBaseMotor.configEncoderCodesPerRev(4095);
+		leftFrontBaseMotor.setSelectedSensorPosition(
+				0, // New Sensor Position
+				0, // Use Primary Closed Loop
+				0);// timeoutMS
+		rightFrontBaseMotor.setSelectedSensorPosition(
+				0, // New Sensor Position
+				0, // Use Primary Closed Loop
+				0);// timeoutMS
 		
 		// LiveWindow
 //		LiveWindow.addSensor("SubDriveBase", "Gyro", gyroAccel);
@@ -98,23 +117,24 @@ public class DriveBase extends Subsystem {
 		}
 
 	private void initSafeMotor() {
-		leftFrontBaseMotor.setSafetyEnabled(true);
-		rightFrontBaseMotor.setSafetyEnabled(true);
-		leftRearBaseMotor.setSafetyEnabled(true);
-		rightRearBaseMotor.setSafetyEnabled(true);
-		leftTopBaseMotor.setSafetyEnabled(true);
-		rightTopBaseMotor.setSafetyEnabled(true);
+		// This ain't workin' on da new versions, dood. Get it working.
+		//leftFrontBaseMotor.setSafetyEnabled(true);
+		//rightFrontBaseMotor.setSafetyEnabled(true);
+		//leftRearBaseMotor.setSafetyEnabled(true);
+		//rightRearBaseMotor.setSafetyEnabled(true);
+		//leftTopBaseMotor.setSafetyEnabled(true);
+		//rightTopBaseMotor.setSafetyEnabled(true);
 	}
 	
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.
-        //setDefaultCommand(new MySpecialCommand());
+        setDefaultCommand(new DriveWithJoysticks());
     }
     public void tankDrive(double left, double right) {
-		if(left > KDeadZoneLimit || left < -KDeadZoneLimit) leftFrontBaseMotor.set(left);
-		else leftFrontBaseMotor.set(0);
-		if(right > KDeadZoneLimit || right < -KDeadZoneLimit) rightFrontBaseMotor.set(right);
-		else rightFrontBaseMotor.set(0);
+		if(left > KDeadZoneLimit || left < -KDeadZoneLimit) leftFrontBaseMotor.set(ControlMode.PercentOutput, left);
+		else leftFrontBaseMotor.set(ControlMode.PercentOutput, 0);
+		if(right > KDeadZoneLimit || right < -KDeadZoneLimit) rightFrontBaseMotor.set(ControlMode.PercentOutput, right);
+		else rightFrontBaseMotor.set(ControlMode.PercentOutput, 0);
 	}
     public void highShiftBase() {
 		shifterSolenoid.set(DoubleSolenoid.Value.kReverse);
