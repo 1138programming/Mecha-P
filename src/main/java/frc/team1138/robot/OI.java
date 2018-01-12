@@ -17,7 +17,7 @@ public class OI {
 	
 	//Joystick Definitions
 	public static final int KLeftJoystick = 0 ;
-	public static final int KRightJoystick = 1 ;
+	public static final int KRightJoystick = 1 ; 
 	public static final int KXBoxController = 2;
 
 	//XBox button definitions
