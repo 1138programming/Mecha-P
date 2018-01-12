@@ -10,3 +10,4 @@ java/bin/*
 java/.settings
 *.class
 
+/.gradle/

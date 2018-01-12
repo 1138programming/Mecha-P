@@ -117,7 +117,7 @@ public class DriveBase extends Subsystem {
 		}
 
 	private void initSafeMotor() {
-		// This ain't workin' on da new versions, dood. Get it working.
+		// This ain't workin' on da new versions, dood. We're done with them.
 		//leftFrontBaseMotor.setSafetyEnabled(true);
 		//rightFrontBaseMotor.setSafetyEnabled(true);
 		//leftRearBaseMotor.setSafetyEnabled(true);
