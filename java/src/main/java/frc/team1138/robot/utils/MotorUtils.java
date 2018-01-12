@@ -1,6 +1,7 @@
 package frc.team1138.robot.utils;
 
-import com.ctre.CANTalon;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX; 
 
 /**
  * @author Zheyuan Hu
@@ -8,25 +9,20 @@ import com.ctre.CANTalon;
  */
 
 public class MotorUtils{
-    private CANTalon talon; 
+    private WPI_TalonSRX talon; 
     
     /**
      * 
      */
     public MotorUtils(final int port){
-        this.talon = new CANTalon(port);
+        this.talon = new WPI_TalonSRX(port);
         this.talon.setSafetyEnabled(true);
     }
 
     public MotorUtils slaveTo(MotorUtils master){
-        this.talon.changeControlMode(CANTalon.TalonControlMode.Follower);
-        this.talon.set(master.getDeviceID());
+        this.talon.set(ControlMode.Follower, master.getDeviceID());
+        this.talon.follow(master.getMotor());
         return this; 
-    }
-
-    public MotorUtils enableControl(){
-        this.talon.enableControl();
-        return this;
     }
 
     public MotorUtils setInverted(boolean isInverted){
@@ -42,18 +38,22 @@ public class MotorUtils{
         return talon.getDeviceID(); 
     }
 
-    public MotorUtils setEncoder(final int codesPerRev){
-        this.talon.setFeedbackDevice(CANTalon.FeedbackDevice.CtreMagEncoder_Relative);
-        this.talon.configEncoderCodesPerRev(codesPerRev);
-        this.talon.setEncPosition(0);
-        return this; 
+    public WPI_TalonSRX getMotor(){
+        return this.talon; 
     }
 
-    public void zeroEncoder(){
-        this.talon.setEncPosition(0);
-    }
+    // public MotorUtils setEncoder(final int codesPerRev){
+    //     this.talon.setFeedbackDevice(CANTalon.FeedbackDevice.CtreMagEncoder_Relative);
+    //     this.talon.configEncoderCodesPerRev(codesPerRev);
+    //     this.talon.setEncPosition(0);
+    //     return this; 
+    // }
 
-    public CANTalon sendable(){
+    // public void zeroEncoder(){
+    //     this.talon.setEncPosition(0);
+    // }
+
+    public WPI_TalonSRX sendable(){
         return this.talon; 
     }
 }

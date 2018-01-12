@@ -5,5 +5,8 @@
 MechaP.iml
 .idea/workspace.xml
 .vscode/settings.json
-java/build
+java/build/*
+java/bin/*
 java/.settings
+*.class
+

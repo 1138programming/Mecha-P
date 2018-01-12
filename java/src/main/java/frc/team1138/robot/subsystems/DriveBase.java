@@ -5,8 +5,8 @@ import frc.team1138.robot.utils.DriveTrain;
 //import frc.team1138.robot.RobotMap; Uncomment if RobotMap is needed.
 import frc.team1138.robot.utils.MotorUtils;
 
-import com.ctre.CANTalon;
-import com.ctre.PigeonImu;
+//import com.ctre.CANTalon;
+//import com.ctre.PigeonImu;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import frc.team1138.robot.commands.DriveWithJoysticks;
@@ -52,9 +52,9 @@ public class DriveBase extends Subsystem {
 		// Motors
 		// Enable master motors and encoders 
 		leftFrontBaseMotor = new MotorUtils(KLeftFrontBaseTalon);
-		leftFrontBaseMotor.enableControl().setInverted(true).setEncoder(4095); 
+		//leftFrontBaseMotor.enableControl().setInverted(true).setEncoder(4095); 
 		rightFrontBaseMotor = new MotorUtils(KRightFrontBaseTalon);
-		rightFrontBaseMotor.enableControl().setEncoder(4095);
+		//rightFrontBaseMotor.enableControl().setEncoder(4095);
 		//Enable slave motors 
 		leftRearBaseMotor = new MotorUtils(KLeftRearBaseTalon);
 		leftRearBaseMotor.slaveTo(leftFrontBaseMotor); 
@@ -69,10 +69,10 @@ public class DriveBase extends Subsystem {
 		// Solenoids 
 		shifterSolenoid = new DoubleSolenoid(KShifterSolenoid1, KShifterSolenoid2);
 		//Gyro & Accel. The new Pigeon Imu is connected to a talon
-		gyroTalon = new CANTalon(3); 
-		pigeonImu = new PigeonImu(gyroTalon);
-		SmartDashboard.putNumber("Navx Connection: ", pigeonImu.GetFirmVers());
-		pigeonImu.SetYaw(0);
+		// gyroTalon = new CANTalon(3); 
+		// pigeonImu = new PigeonImu(gyroTalon);
+		// SmartDashboard.putNumber("Navx Connection: ", pigeonImu.GetFirmVers());
+		// pigeonImu.SetYaw(0);
 	}
 	
     public void initDefaultCommand() {
@@ -104,17 +104,17 @@ public class DriveBase extends Subsystem {
 	/**
      * public method to reset Gyro value
      */
-    public void resetGyro() {
-        pigeonImu.SetYaw(0);
-	}
+    // public void resetGyro() {
+    //     pigeonImu.SetYaw(0);
+	// }
 
-    /**
-     * @return Current Gyro Value in degrees from 180.0 to -180.0
-     */
-    public double getAngle() {
-        double[] ypr = new double[3];
-		pigeonImu.GetYawPitchRoll(ypr);
-		//if it is not positive when turns right, then sign negative
-		return (-ypr[0]); 
-	}
+    // /**
+    //  * @return Current Gyro Value in degrees from 180.0 to -180.0
+    //  */
+    // public double getAngle() {
+    //     double[] ypr = new double[3];
+	// 	pigeonImu.GetYawPitchRoll(ypr);
+	// 	//if it is not positive when turns right, then sign negative
+	// 	return (-ypr[0]); 
+	// }
 }
