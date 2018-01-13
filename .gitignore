@@ -3,3 +3,7 @@ MechaP.iml
 /build/
 /bin/
 /.gradle/
+/java/
+/.settings/
+
+.classpath
