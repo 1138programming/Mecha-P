@@ -7,34 +7,47 @@ import frc.team1138.robot.Robot;
 /**
  *
  */
-public class DriveWithJoysticks extends Command {
-	private OI oi;
-    public DriveWithJoysticks() {
-    	// TODO Auto-generated constructor stub
-    	requires(Robot.DRIVE_BASE);
-    	oi = new OI(); 
-    }
+public class DriveWithJoysticks extends Command
+{
+	private final OI oi;
 
-    // Called just before this Command runs the first time
-    protected void initialize() {
-    }
+	public DriveWithJoysticks()
+	{
+		// TODO Auto-generated constructor stub
+		requires(Robot.DRIVE_BASE);
+		oi = new OI();
+	}
 
-    // Called repeatedly when this Command is scheduled to run
-    protected void execute() {
-    	Robot.DRIVE_BASE.tankDrive(oi.getLeftController(), oi.getRightController());
-    }
+	// Called just before this Command runs the first time
+	@Override
+	protected void initialize()
+	{
+	}
 
-    // Make this return true when this Command no longer needs to run execute()
-    protected boolean isFinished() {
-        return true;
-    }
+	// Called repeatedly when this Command is scheduled to run
+	@Override
+	protected void execute()
+	{
+		Robot.DRIVE_BASE.tankDrive(oi.getLeftController(), oi.getRightController());
+	}
 
-    // Called once after isFinished returns true
-    protected void end() {
-    }
+	// Make this return true when this Command no longer needs to run execute()
+	@Override
+	protected boolean isFinished()
+	{
+		return true;
+	}
 
-    // Called when another command which requires one or more of the same
-    // subsystems is scheduled to run
-    protected void interrupted() {
-    }
+	// Called once after isFinished returns true
+	@Override
+	protected void end()
+	{
+	}
+
+	// Called when another command which requires one or more of the same
+	// subsystems is scheduled to run
+	@Override
+	protected void interrupted()
+	{
+	}
 }
