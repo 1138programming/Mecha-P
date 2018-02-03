@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
+import com.ctre.phoenix.sensors.PigeonIMU_Faults;
 
 // import edu.wpi.first.wpilibj.DoubleSolenoid;
 // import edu.wpi.first.wpilibj.Ultrasonic;
@@ -46,7 +47,7 @@ public class DriveBase extends Subsystem
 
 	// Setup the talons for the base
 	private final TalonSRX leftFrontBaseMotor, rightFrontBaseMotor, leftRearBaseMotor, leftTopBaseMotor,
-			rightRearBaseMotor, rightTopBaseMotor;
+			rightRearBaseMotor, rightTopBaseMotor, gyroTalon;
 
 	// Setup the shifter solenoid
 	// private final DoubleSolenoid shifterSolenoid;
@@ -60,8 +61,10 @@ public class DriveBase extends Subsystem
 	public DriveBase()
 	{
 		// Gyro
-		pigeonIMU = new PigeonIMU(6);
+		gyroTalon = new TalonSRX(6);
+		pigeonIMU = new PigeonIMU(gyroTalon);
 		pigeonIMU.setYaw(0, 0);
+		SmartDashboard.putNumber("pig status", pigeonIMU.getFirmwareVersion());
 		// Master talons
 		leftFrontBaseMotor = new TalonSRX(KLeftFrontBaseTalon);
 		rightFrontBaseMotor = new TalonSRX(KRightFrontBaseTalon);
@@ -170,8 +173,16 @@ public class DriveBase extends Subsystem
 	public double getAngle()
 	{
 		final double[] ypr = new double[3]; // Create an array to take in yaw, pitch, and roll of gyro
+		
 		pigeonIMU.getYawPitchRoll(ypr);
-		return (-ypr[0]);
+		
+		return (ypr[0]);
+	}
+	
+	public PigeonIMU_Faults getF() {
+		PigeonIMU_Faults f = new PigeonIMU_Faults(); 
+		pigeonIMU.getFaults(f);
+		return f;
 	}
 
 	// Resets the gyro
@@ -221,7 +232,10 @@ public class DriveBase extends Subsystem
 		+ rightRearBaseMotor.getMotorOutputPercent());
 		SmartDashboard.putString("Right Top: ", rightTopBaseMotor.getControlMode() + " " + rightTopBaseMotor.getInverted() + " " 
 		+ rightTopBaseMotor.getMotorOutputPercent());
-
+		
+		SmartDashboard.putNumber("Gyro Yaw: ", getAngle());
+		SmartDashboard.putString("Gyro F: ", getF().toString());
+		
 		SmartDashboard.putNumber("Left Encoder", getLeftEncoderValue());
 		SmartDashboard.putNumber("Right Encoder", getRightEncoderValue());
 	}
