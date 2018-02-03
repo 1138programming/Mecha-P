@@ -7,17 +7,23 @@ import frc.team1138.robot.Robot;
 
 public class DriveWithEncoders extends PIDCommand
 {
-	private static double P = 0.7, I = 0.0, D = 0.0;
-	private final PIDController driveController;
+	double distance, speed;
+	private static double P = 0.0002, I = 0.0, D = 0.0001;
+	private PIDController driveController;
+	double DistanceToTarget = 0;
+	double ticksPerRotation = 4096;
 
-	public DriveWithEncoders()
+	public DriveWithEncoders(double distance, double speed)
 	{
 		super("Drive Distance", P, I, D);
+		SmartDashboard.putNumber("setEncoder", 0);
 		requires(Robot.DRIVE_BASE);
+		this.distance = distance;
+		this.speed = distance;
 		driveController = this.getPIDController();
-		driveController.setInputRange(-1000000000, 1000000000); // Technically the encoders can go forever
-		driveController.setOutputRange(-1, 1); // Min and max input for talons
-		driveController.setAbsoluteTolerance(10); // Error allowed
+		driveController.setInputRange(-20000000, 20000000);
+		driveController.setOutputRange(-speed, speed);
+		driveController.setAbsoluteTolerance(100); // Error allowed
 		driveController.setContinuous(true);
 		Robot.DRIVE_BASE.resetEncoders();
 	}
@@ -26,6 +32,8 @@ public class DriveWithEncoders extends PIDCommand
 	@Override
 	protected void initialize()
 	{
+		Robot.DRIVE_BASE.resetEncoders();
+		setTarget(distance * ticksPerRotation);
 	}
 
 	@Override
@@ -42,20 +50,21 @@ public class DriveWithEncoders extends PIDCommand
 	@Override
 	protected void usePIDOutput(double output)
 	{
-		// THE SIDE WITH THE GEAR IS THE FRONT!
-		if (!driveController.onTarget())
-		{
-			if ((this.returnPIDInput() - this.getSetpoint()) > 0)
-			{ // need to move forward
-				System.out.println("Move Forward");
-				System.out.println("Left Motor: " + (output) + "Right Motor: " + (output));
-				Robot.DRIVE_BASE.tankDrive(output, output);
-			}
-			else if ((this.returnPIDInput() - this.getSetpoint()) < 0)
-			{ // need to move backward
-				System.out.println("Move Backward");
-				System.out.println("Left Motor: " + (-output) + "Right Motor: " + (-output));
-				Robot.DRIVE_BASE.tankDrive(-output, -output);
+		// The side with the GEAR IS THE FRONT!
+				if (!driveController.onTarget())
+				{
+					if (this.returnPIDInput() - this.getSetpoint() < 0)
+					{ // need to move forward
+						System.out.println("Move Forward");
+						System.out.println("Left Motor: " + (output) + "Right Motor: " + (output));
+						SmartDashboard.putNumber("Distance From Target", this.returnPIDInput() - this.getSetpoint());
+						Robot.DRIVE_BASE.tankDrive(-output, -output);
+					}
+					else if (this.returnPIDInput() - this.getSetpoint() > 0)
+					{ // need to move backward
+						System.out.println("Move Backward");
+						System.out.println("Left Motor: " + (-output) + "Right Motor: " + (-output));
+						Robot.DRIVE_BASE.tankDrive(-output, -output);
 			}
 			System.out.println("set point: " + this.getSetpoint());
 			System.out.println("Current Encoder Value: " + Robot.DRIVE_BASE.getLeftEncoderValue());
@@ -78,6 +87,8 @@ public class DriveWithEncoders extends PIDCommand
 
 		setTarget(setEncoder);
 		SmartDashboard.putBoolean("tracking", true);
+		SmartDashboard.putNumber("Left", Robot.DRIVE_BASE.getLeftEncoderValue());
+		SmartDashboard.putNumber("Right", Robot.DRIVE_BASE.getRightEncoderValue());
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
@@ -85,6 +96,7 @@ public class DriveWithEncoders extends PIDCommand
 	protected boolean isFinished()
 	{
 		System.out.println("On Target: " + driveController.onTarget());
+		SmartDashboard.putNumber("Error", this.returnPIDInput() - this.getSetpoint());
 		return driveController.onTarget();
 	}
 
@@ -103,5 +115,7 @@ public class DriveWithEncoders extends PIDCommand
 	@Override
 	protected void interrupted()
 	{
+		
 	}
 }
+
