@@ -5,9 +5,10 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.Ultrasonic;
+// import edu.wpi.first.wpilibj.DoubleSolenoid;
+// import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //import org.usfirst.frc.team1138.robot.RobotMap; Uncomment if RobotMap is needed.
 import frc.team1138.robot.commands.DriveWithJoysticks;
 
@@ -28,9 +29,6 @@ public class DriveBase extends Subsystem
 	public static final int KRightRearBaseTalon = 4;
 	public static final int KRightFrontBaseTalon = 5;
 	public static final int KRightTopBaseTalon = 6;
-	public static final int KLeftBaseMaster = 1; // KLeftMaster = Master Talon for left side
-	public static final int KRightBaseMaster = 2; // KRightMaster = Master Talon for right side
-
 	// All of the solenoids are doubles, so they need 2 numbers each. If you change
 	// one,
 	// be sure to change the other one of the pair also.
@@ -51,16 +49,19 @@ public class DriveBase extends Subsystem
 			rightRearBaseMotor, rightTopBaseMotor;
 
 	// Setup the shifter solenoid
-	private final DoubleSolenoid shifterSolenoid;
+	// private final DoubleSolenoid shifterSolenoid;
 
 	// Setup the gyro
 	private final PigeonIMU pigeonIMU;
 
 	// Setup the ultrasonic (like for boats, but for a robot instead)
-	private final Ultrasonic baseUltrasonic;
+	// private final Ultrasonic baseUltrasonic;
 
 	public DriveBase()
 	{
+		// Gyro
+		pigeonIMU = new PigeonIMU(6);
+		pigeonIMU.setYaw(0, 0);
 		// Master talons
 		leftFrontBaseMotor = new TalonSRX(KLeftFrontBaseTalon);
 		rightFrontBaseMotor = new TalonSRX(KRightFrontBaseTalon);
@@ -72,24 +73,23 @@ public class DriveBase extends Subsystem
 
 		// Config the talons and enable
 		leftFrontBaseMotor.setInverted(true);
+		leftRearBaseMotor.setInverted(true);
 		// Slaves
 		leftRearBaseMotor.set(ControlMode.Follower, leftFrontBaseMotor.getDeviceID());
 		leftTopBaseMotor.set(ControlMode.Follower, leftFrontBaseMotor.getDeviceID());
 		rightRearBaseMotor.set(ControlMode.Follower, rightFrontBaseMotor.getDeviceID());
 		rightTopBaseMotor.set(ControlMode.Follower, rightFrontBaseMotor.getDeviceID());
 
+		leftTopBaseMotor.setInverted(false);
+		rightTopBaseMotor.setInverted(true);
 		// Solenoid
-		shifterSolenoid = new DoubleSolenoid(KShifterSolenoid1, KShifterSolenoid2);
-
-		// Gyro
-		pigeonIMU = new PigeonIMU(leftFrontBaseMotor);
-		pigeonIMU.setYaw(0, 0);
+		// shifterSolenoid = new DoubleSolenoid(KShifterSolenoid1, KShifterSolenoid2);
 
 		// Ultrasonic
 		// Output, then input. Auto sets to inches, but can be changed with a third
 		// parameter
-		baseUltrasonic = new Ultrasonic(KBaseUltrasonic, KBaseUltrasonic);
-		baseUltrasonic.setAutomaticMode(true);
+		// baseUltrasonic = new Ultrasonic(KBaseUltrasonic, KBaseUltrasonic);
+		// baseUltrasonic.setAutomaticMode(true);
 
 		// Encoders on talons
 		leftFrontBaseMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, // Use Primary
@@ -119,6 +119,7 @@ public class DriveBase extends Subsystem
 	// Used to drive tank control style in teleop mode
 	// (Programming secret: if what's in your loop is only one line long you don't
 	// need {})
+
 	public void tankDrive(double left, double right)
 	{
 		if ((left > KDeadZoneLimit) || (left < -KDeadZoneLimit))
@@ -137,32 +138,33 @@ public class DriveBase extends Subsystem
 		{
 			rightFrontBaseMotor.set(ControlMode.PercentOutput, 0);
 		}
+		report();
 	}
 
 	// High shifts base
-	public void highShiftBase()
-	{
-		shifterSolenoid.set(DoubleSolenoid.Value.kReverse);
-	}
+	// public void highShiftBase()
+	// {
+	// 	shifterSolenoid.set(DoubleSolenoid.Value.kReverse);
+	// }
 
-	// Low shifts base
-	public void lowShiftBase()
-	{
-		shifterSolenoid.set(DoubleSolenoid.Value.kForward);
-	}
+	// // Low shifts base
+	// public void lowShiftBase()
+	// {
+	// 	shifterSolenoid.set(DoubleSolenoid.Value.kForward);
+	// }
 
-	// Toggles the shift mode of the base using highShiftBase() and lowShiftBase()
-	public void toggleShift()
-	{
-		if (shifterSolenoid.get() == DoubleSolenoid.Value.kForward)
-		{
-			highShiftBase();
-		}
-		else
-		{
-			lowShiftBase();
-		}
-	}
+	// // Toggles the shift mode of the base using highShiftBase() and lowShiftBase()
+	// public void toggleShift()
+	// {
+	// 	if (shifterSolenoid.get() == DoubleSolenoid.Value.kForward)
+	// 	{
+	// 		highShiftBase();
+	// 	}
+	// 	else
+	// 	{
+	// 		lowShiftBase();
+	// 	}
+	// }
 
 	// Returns angle of the gyro
 	public double getAngle()
@@ -200,6 +202,27 @@ public class DriveBase extends Subsystem
 	// Returns value of the ultrasonic
 	public double getUltrasonic()
 	{
-		return baseUltrasonic.getRangeInches();
+		// return baseUltrasonic.getRangeInches();
+		return 0;
+	}
+
+	public void report()
+	{
+		SmartDashboard.putString("Left Front: ", leftFrontBaseMotor.getControlMode() + " " + leftFrontBaseMotor.getInverted() + " " 
+		+ leftFrontBaseMotor.getMotorOutputPercent());
+		SmartDashboard.putString("Left Rear: ", leftRearBaseMotor.getControlMode() + " " + leftRearBaseMotor.getInverted() + " " 
+		+ leftRearBaseMotor.getMotorOutputPercent());
+		SmartDashboard.putString("Left Top: ", leftTopBaseMotor.getControlMode() + " " + leftTopBaseMotor.getInverted() + " " 
+		+ leftTopBaseMotor.getMotorOutputPercent());
+
+		SmartDashboard.putString("Right Front: ", rightFrontBaseMotor.getControlMode() + " " + rightFrontBaseMotor.getInverted() + " " 
+		+ rightFrontBaseMotor.getMotorOutputPercent());
+		SmartDashboard.putString("Right Rear: ", rightRearBaseMotor.getControlMode() + " " + rightRearBaseMotor.getInverted() + " " 
+		+ rightRearBaseMotor.getMotorOutputPercent());
+		SmartDashboard.putString("Right Top: ", rightTopBaseMotor.getControlMode() + " " + rightTopBaseMotor.getInverted() + " " 
+		+ rightTopBaseMotor.getMotorOutputPercent());
+
+		SmartDashboard.putNumber("Left Encoder", getLeftEncoderValue());
+		SmartDashboard.putNumber("Right Encoder", getRightEncoderValue());
 	}
 }

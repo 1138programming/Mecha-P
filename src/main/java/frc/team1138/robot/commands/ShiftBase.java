@@ -24,7 +24,7 @@ public class ShiftBase extends Command
 	@Override
 	protected void execute()
 	{
-		Robot.DRIVE_BASE.toggleShift();
+		// Robot.DRIVE_BASE.toggleShift();
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
