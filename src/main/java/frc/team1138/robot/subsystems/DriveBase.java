@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.PigeonIMU_Faults;
+import com.sun.javafx.sg.prism.NGAmbientLight;
 
 // import edu.wpi.first.wpilibj.DoubleSolenoid;
 // import edu.wpi.first.wpilibj.Ultrasonic;
@@ -18,7 +19,7 @@ import frc.team1138.robot.commands.DriveWithJoysticks;
  * included. Most of this is simply borrowed from JavaMomentum until we know
  * what sensors and solenoids are where and such.
  * 
- * @author Christian Gideon
+ * @author Christian Gideon, Zheyuan Hu
  */
 
 public class DriveBase extends Subsystem
@@ -144,6 +145,17 @@ public class DriveBase extends Subsystem
 		report();
 	}
 
+	/**
+	 * @param left Left Motor Value must be from -1.0 to 1.0
+	 * @param right Right Motor Value must be from -1.0 to 1.0
+	 * @param angle Angle must be with in -90 to 90
+	 */
+	public void driveSCurve(double left, double right, double angle)
+	{
+		double leftOutput = left + Math.sin(angle/180.0);
+		double rightOutput = right - Math.sin(angle/180.0);
+		tankDrive(leftOutput, rightOutput);
+	}
 	// High shifts base
 	// public void highShiftBase()
 	// {
