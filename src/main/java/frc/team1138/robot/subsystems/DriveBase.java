@@ -5,7 +5,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.PigeonIMU_Faults;
-import com.sun.javafx.sg.prism.NGAmbientLight;
+//import com.sun.javafx.sg.prism.NGAmbientLight;
 
 // import edu.wpi.first.wpilibj.DoubleSolenoid;
 // import edu.wpi.first.wpilibj.Ultrasonic;
@@ -25,12 +25,12 @@ import frc.team1138.robot.commands.DriveWithJoysticks;
 public class DriveBase extends Subsystem
 {
 	// Setup the base configuration by assigning talons
-	public static final int KLeftRearBaseTalon = 1;
-	public static final int KLeftFrontBaseTalon = 2;
-	public static final int KLeftTopBaseTalon = 3;
-	public static final int KRightRearBaseTalon = 4;
-	public static final int KRightFrontBaseTalon = 5;
-	public static final int KRightTopBaseTalon = 6;
+	public static final int KLeftRearBaseTalon = 7;
+	public static final int KLeftFrontBaseTalon = 9;
+	public static final int KLeftTopBaseTalon = 8;
+	public static final int KRightRearBaseTalon = 6;
+	public static final int KRightFrontBaseTalon = 4;
+	public static final int KRightTopBaseTalon = 5;
 	// All of the solenoids are doubles, so they need 2 numbers each. If you change
 	// one,
 	// be sure to change the other one of the pair also.
@@ -65,7 +65,7 @@ public class DriveBase extends Subsystem
 		gyroTalon = new TalonSRX(6);
 		pigeonIMU = new PigeonIMU(gyroTalon);
 		pigeonIMU.setYaw(0, 0);
-		SmartDashboard.putNumber("pig status", pigeonIMU.getFirmwareVersion());
+		SmartDashboard.putNumber("pigeon status", pigeonIMU.getFirmwareVersion());
 		// Master talons
 		leftFrontBaseMotor = new TalonSRX(KLeftFrontBaseTalon);
 		rightFrontBaseMotor = new TalonSRX(KRightFrontBaseTalon);
@@ -188,13 +188,7 @@ public class DriveBase extends Subsystem
 		
 		pigeonIMU.getYawPitchRoll(ypr);
 		
-		return (ypr[0]);
-	}
-	
-	public PigeonIMU_Faults getF() {
-		PigeonIMU_Faults f = new PigeonIMU_Faults(); 
-		pigeonIMU.getFaults(f);
-		return f;
+		return (-ypr[0]);
 	}
 
 	// Resets the gyro
@@ -206,7 +200,7 @@ public class DriveBase extends Subsystem
 	// Returns value of the left encoder
 	public double getLeftEncoderValue()
 	{
-		return leftFrontBaseMotor.getSensorCollection().getQuadraturePosition();
+		return -1 * leftFrontBaseMotor.getSensorCollection().getQuadraturePosition(); //Beware unexplained encoder bugs
 	}
 
 	// Returns value of the right encoder
@@ -246,7 +240,6 @@ public class DriveBase extends Subsystem
 		+ rightTopBaseMotor.getMotorOutputPercent());
 		
 		SmartDashboard.putNumber("Gyro Yaw: ", getAngle());
-		SmartDashboard.putString("Gyro F: ", getF().toString());
 		
 		SmartDashboard.putNumber("Left Encoder", getLeftEncoderValue());
 		SmartDashboard.putNumber("Right Encoder", getRightEncoderValue());

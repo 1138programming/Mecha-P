@@ -15,7 +15,7 @@ public class CrossLine extends CommandGroup
 		requires(Robot.DRIVE_BASE);
 		oi = new OI();
 		addSequential(new TurnWithGyro());
-		addSequential(new DriveWithEncoders());
+		addSequential(new DriveWithEncoders(11, 1));
 	}
 
 	@Override

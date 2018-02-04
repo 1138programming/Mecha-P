@@ -42,7 +42,7 @@ public class Robot extends IterativeRobot
 		DRIVE_BASE = new DriveBase();
 		oi = new OI();
 		chooser.addObject("Turn With Gyro", new TurnWithGyro());
-		chooser.addObject("Drive With Encoders", new DriveWithEncoders());
+		chooser.addObject("Drive With Encoders", new DriveWithEncoders(5, 1));
 		chooser.addObject("Drive With Ultrasonic", new DriveWithUltrasonic());
 		SmartDashboard.putData("Auto mode", chooser);
 	}
